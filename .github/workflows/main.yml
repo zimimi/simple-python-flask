@@ -15,5 +15,4 @@ jobs:
       - name: Echo
         run: |
           echo "test-5"
-          echo "end squash"
           echo "first rebase"
