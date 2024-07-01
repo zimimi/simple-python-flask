@@ -13,4 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo
-        run: echo "test-3.4"
+        run: |
+          echo "test-3.4"
+          echo "one more"
