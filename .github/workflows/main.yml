@@ -15,4 +15,4 @@ jobs:
       - name: Echo
         run: |
           echo "test-5"
-          echo "final squach"
+          echo "end squash"
