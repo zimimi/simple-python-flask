@@ -1,0 +1,14 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # This allows you to manually trigger the workflow
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "test"
