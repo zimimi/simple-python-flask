@@ -15,4 +15,3 @@ jobs:
       - name: Echo
         run: |
           echo "test-3.4"
-          echo "one more"
