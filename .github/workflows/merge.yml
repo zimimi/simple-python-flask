@@ -9,6 +9,18 @@ on:
   workflow_dispatch: # This allows you to manually trigger the workflow
 
 jobs:
+  vars:
+    name: Set Variables
+    outputs:
+      pr: ${{ steps.pr.outputs.pr }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1
+    steps:
+      # Get PR number for squash merges to main
+      - name: PR Number
+        id: pr
+        uses: bcgov-nr/action-get-pr@v0.0.1
+        
   build:
     runs-on: ubuntu-latest
     outputs:
@@ -30,10 +42,10 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [vars, build]
     steps:
       - name: Print image tag
-        run: echo "${{ needs.build.outputs.image-tag }}"
+        run: echo "${{ needs.vars.outputs.pr }}"
       - name: Print Git commit hash
         run: echo "${{ needs.build.outputs.commit-hash }}"
       - name: Print Github output
