@@ -11,8 +11,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.set-output.outputs.image-tag }}
+    steps:
+      - name: Extract Git commit hash
+        id: commit-hash
+        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+      - name: Set output
+        id: set-output
+        run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Print image tag
         run: echo "${{ needs.build.outputs.image-tag }}"
       - name: Print Github output
         run: echo "$GITHUB_OUTPUT"
+      - name: Print Git commit sha
+        run: echo "$GITHUB_ENV"
