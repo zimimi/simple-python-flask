@@ -8,6 +8,11 @@ on:
       - '.github/**'
   workflow_dispatch: # This allows you to manually trigger the workflow
 
+concurrency:
+  # Cancel in progress for PR open and close, but not merge_group
+  group: ${{ github.event.number }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
