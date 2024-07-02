@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
+      commit-hash: ${{ steps.commit-hash.GIT_SHA }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -22,6 +23,10 @@ jobs:
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+      - name: Print Github output
+        run: echo "$GITHUB_OUTPUT"
+      - name: Print Github env
+        run: echo "$GITHUB_ENV"
 
   deploy:
     runs-on: ubuntu-latest
@@ -29,7 +34,9 @@ jobs:
     steps:
       - name: Print image tag
         run: echo "${{ needs.build.outputs.image-tag }}"
+      - name: Print Git commit hash
+        run: echo "${{ needs.build.outputs.commit-hash }}"
       - name: Print Github output
         run: echo "$GITHUB_OUTPUT"
-      - name: Print Git commit sha
+      - name: Print Github env
         run: echo "$GITHUB_ENV"
