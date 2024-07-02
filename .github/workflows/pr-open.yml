@@ -12,7 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      image-tag-output: ${{ steps.set-output.outputs.image-tag }}
       commit-hash: ${{ steps.commit-hash.git-sha }}
     steps:
       - name: Checkout repository
@@ -20,8 +19,6 @@ jobs:
       - name: Extract Git commit hash
         id: commit-hash
         run: echo "git-sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-        env:
-          GITHUB_OUTPUT: ${{ steps.commit-hash.outputs.git-sha }}
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
