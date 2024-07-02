@@ -24,6 +24,10 @@ jobs:
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu latest
+    steps:
       - name: Print image tag
         run: echo "${{ needs.build.outputs.image-tag }}"
       - name: Print Git commit hash
