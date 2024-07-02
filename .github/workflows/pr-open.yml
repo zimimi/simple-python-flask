@@ -26,5 +26,7 @@ jobs:
     steps:
       - name: Print image tag
         run: echo "${{ needs.build.outputs.image-tag }}"
+      - name: Print Github output
+        run: echo "$GITHUB_OUTPUT"
 
 
