@@ -9,14 +9,21 @@ on:
   workflow_dispatch: # This allows you to manually trigger the workflow
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
     steps:
+      - name: Print Github output
+        run: echo "$GITHUB_OUTPUT"
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
-      - name: Print Github output
-        run: echo "$GITHUB_OUTPUT"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print image tag
+        run: echo "${{ needs.build.outputs.image-tag }}"
+
 
