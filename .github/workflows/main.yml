@@ -20,5 +20,4 @@ jobs:
         id: set-output
         run: echo "::set-output name=image-tag::${{ github.sha }}"
     outputs:
-      image-tag:
-        value: ${{ steps.set-output.outputs.image-tag }}
+      image-tag: ${{ steps.set-output.outputs.image-tag }}
