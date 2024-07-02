@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Extract Git commit hash
         id: commit-hash
-        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
@@ -36,8 +36,4 @@ jobs:
         run: echo "${{ needs.build.outputs.image-tag-output }}"
       - name: Print Git commit hash
         run: echo "${{ needs.build.outputs.commit-hash }}"
-      - name: Print Github output
-        run: echo "$GITHUB_OUTPUT"
-      - name: Print GIT_SHA
-        run: echo "${{ env.GIT_SHA }}"
 
