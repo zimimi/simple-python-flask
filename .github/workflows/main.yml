@@ -11,13 +11,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Echo
-        run: |
-          echo "test-5"
-          echo "first rebase"
-      - name: Set output
-        id: set-output
-        run: echo "::set-output name=image-tag::${{ github.sha }}"
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
+    steps:
+      - name: Set output
+        id: set-output
+        run: echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+      - name: Print Github output
+        run: echo "$GITHUB_OUTPUT"
+
