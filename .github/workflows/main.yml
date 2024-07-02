@@ -18,7 +18,7 @@ jobs:
         run: echo "$GITHUB_OUTPUT"
       - name: Set output
         id: set-output
-        run: echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+        run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
 
   deploy:
     runs-on: ubuntu-latest
