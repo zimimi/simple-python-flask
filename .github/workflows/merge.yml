@@ -9,8 +9,7 @@ on:
   workflow_dispatch: # This allows you to manually trigger the workflow
 
 concurrency:
-  # Cancel in progress for PR open and close, but not merge_group
-  group: ${{ github.event.number }}
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
