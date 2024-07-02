@@ -14,6 +14,8 @@ jobs:
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Extract Git commit hash
         id: commit-hash
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
