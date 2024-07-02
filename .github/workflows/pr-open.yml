@@ -14,6 +14,9 @@ jobs:
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
     steps:
+      - name: Extract Git commit hash
+        id: commit-hash
+        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Print Github output
         run: echo "$GITHUB_OUTPUT"
       - name: Set output
