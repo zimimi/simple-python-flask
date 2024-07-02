@@ -16,3 +16,9 @@ jobs:
         run: |
           echo "test-5"
           echo "first rebase"
+      - name: Set output
+        id: set-output
+        run: echo "::set-output name=image-tag::${{ github.sha }}"
+    outputs:
+      image-tag:
+        value: ${{ steps.set-output.outputs.image-tag }}
