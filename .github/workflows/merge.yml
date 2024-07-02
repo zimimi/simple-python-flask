@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - test
     paths-ignore:
       - '.github/**'
   workflow_dispatch: # This allows you to manually trigger the workflow
