@@ -26,7 +26,7 @@ jobs:
         run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
 
   deploy:
-    runs-on: ubuntu latest
+    runs-on: ubuntu-latest
     steps:
       - name: Print image tag
         run: echo "${{ needs.build.outputs.image-tag }}"
