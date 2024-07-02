@@ -18,14 +18,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Extract Git commit hash
-        id: vars
-        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        id: commit-hash
+        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
       - name: Set output
         id: set-output
-        run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
+        run: echo "image-tag=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
       - name: Print Github output
         run: echo "$GITHUB_OUTPUT"
-      - name: Print Github env
+      - name: Print GIT_SHA
         run: echo "${{ env.GIT_SHA }}"
 
   deploy:
@@ -38,6 +38,6 @@ jobs:
         run: echo "${{ needs.build.outputs.commit-hash }}"
       - name: Print Github output
         run: echo "$GITHUB_OUTPUT"
-      - name: Print Github env
-        run: echo "$GITHUB_ENV"
+      - name: Print GIT_SHA
+        run: echo "${{ env.GIT_SHA }}"
 
