@@ -39,6 +39,15 @@ jobs:
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-output
+          path: .
+
+      - name: Read and use output
+        run: |
+          cat output.txt
 
   deploy:
     runs-on: ubuntu-latest
