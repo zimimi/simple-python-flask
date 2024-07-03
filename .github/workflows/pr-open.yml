@@ -42,3 +42,12 @@ jobs:
         with:
           name: my-output
           path: output.txt
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-output
+          path: .
+
+      - name: Read and use output
+        run: |
+          cat output.txt

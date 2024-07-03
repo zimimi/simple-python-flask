@@ -44,10 +44,13 @@ jobs:
         with:
           name: my-output
           path: .
-
       - name: Read and use output
         run: |
-          cat output.txt
+          if [ -f output.txt ]; then
+            cat output.txt
+          else
+            echo "No artifact found"
+          fi
 
   deploy:
     runs-on: ubuntu-latest
