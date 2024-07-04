@@ -18,18 +18,18 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.set-output.outputs.image-tag }}
-      commit-hash: ${{ steps.commit-hash.outputs.git-sha }}
+      short-commit-hash: ${{ steps.commit-hash.outputs.git-sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Extract Git commit hash
-        id: commit-hash
+        id: extract-commit-hash
         run: echo "git-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Set output
         id: set-output
         run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
       - name: Print Git commit hash
-        run: echo "${{ steps.commit-hash.outputs.git-sha }}"
+        run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}"
 
   deploy:
     runs-on: ubuntu-latest
