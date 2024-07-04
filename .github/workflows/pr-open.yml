@@ -17,8 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      pr-number: ${{ steps.set-output.outputs.image-tag }}
-      short-commit-hash: ${{ steps.commit-hash.outputs.git-sha }}
+      pr-number: ${{ steps.extract-pr-number.outputs.pr-number }}
+      short-commit-hash: ${{ steps.extract-commit-hash.outputs.git-sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
         run: echo "git-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Set output
         id: extract-pr-number
-        run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
+        run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
       - name: Print Git commit hash
         run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}"
 
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Print rp number
+      - name: Print pr number
         run: echo "${{ needs.build.outputs.pr-number }}"
       - name: Print Git commit hash
         run: echo "${{ needs.build.outputs.short-commit-hash }}"
