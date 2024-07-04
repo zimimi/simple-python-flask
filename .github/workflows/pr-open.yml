@@ -16,6 +16,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: dev
     outputs:
       pr-number: ${{ steps.extract-pr-number.outputs.pr-number }}
       short-commit-hash: ${{ steps.extract-commit-hash.outputs.git-sha }}
@@ -29,7 +30,11 @@ jobs:
         id: extract-pr-number
         run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
       - name: Print Git commit hash
-        run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}"
+        run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}" > "outputs.txt"
+      - name: Setup artifactory
+        uses: jfrog/setup-jfrog-cli@v4
+      - name: Push output to Artifactory
+        run: jf rt upload  --url ${{ secrets.ARTIFACTORY_URL }} --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }} --password ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} "outputs.txt" ${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}
 
   deploy:
     runs-on: ubuntu-latest
