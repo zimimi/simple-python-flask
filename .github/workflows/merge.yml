@@ -62,6 +62,9 @@ jobs:
           username: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }}
 
+      - name: Pull Docker image from Artifactory
+        run: docker pull ${{ secrets.ARTIFACTORY_URL }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/house-innovations-housnav-web:20d4a89
+
       - name: Compare Git SHAs and retag Docker image if different
         run: |
           if [ "${{ env.GIT_SHA }}" != "${{ env.OUTPUT_SHA }}" ]; then
