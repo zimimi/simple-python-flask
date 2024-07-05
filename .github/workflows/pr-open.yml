@@ -46,3 +46,17 @@ jobs:
         run: echo "${{ needs.build.outputs.pr-number }}"
       - name: Print Git commit hash
         run: echo "${{ needs.build.outputs.short-commit-hash }}"
+      - name: Download output.txt from Artifactory
+        run: |
+          curl -v -O \
+            --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
+            https://${{ secrets.ARTIFACTORY_URL }}/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
+
+      - name: Verify downloaded file
+        run: |
+          if [ -f "./outputs.txt" ]; then
+            echo "File downloaded successfully."
+          else
+            echo "File download failed."
+            exit 1
+          fi
