@@ -35,8 +35,6 @@ jobs:
           registry: ${{ secrets.ARTIFACTORY_URL }}
           username: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }}
-      - name: Push Docker image to Artifactory
-        run: docker push ${{ secrets.ARTIFACTORY_URL }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/house-innovations-housnav-web:${{ steps.extract-commit-hash.outputs.short-git-sha }}
       - name: Write Git commit hash to file
         run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}" > "outputs.txt"
       - name: Upload outputs to Artifactory
