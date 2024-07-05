@@ -1,3 +1,6 @@
 test-33.1
 Status of Last Buld workflow:<br>
-<img src="https://github.com/zimimi/simple-python-flask/workflows/Build-and-Test/badge.svg?branch=main"><br>
+<img src="https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg?"><br>
+[![Build](https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg)](https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg)
+
+https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg
