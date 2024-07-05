@@ -51,7 +51,7 @@ jobs:
         run: |
           curl -v -O \
             --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
-            https://${{ secrets.ARTIFACTORY_URL }}:443/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
+            https://${{ secrets.ARTIFACTORY_URL }}/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
 
       - name: Verify downloaded file
         run: |
@@ -61,3 +61,5 @@ jobs:
             echo "File download failed."
             exit 1
           fi
+      - name: Print outputs.txt
+        run: cat outputs.txt
