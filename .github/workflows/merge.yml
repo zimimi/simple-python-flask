@@ -64,16 +64,13 @@ jobs:
 
       - name: Compare Git SHAs and retag Docker image if different
         run: |
-          if [ "$GIT_SHA" != "$OUTPUT_SHA" ]; then
+          if [ "${{ env.GIT_SHA }}" != "${{ env.OUTPUT_SHA }}" ]; then
             echo "SHA mismatch: Retagging Docker image."
-            echo "Output Sha = ${{ env.OUTPUT_SHA }}, Git Sha = ${{ env.GIT_SHA }}
+            docker tag myimage:${{ env.OUTPUT_SHA }} myimage:${{ env.GIT_SHA }}
             # Optionally, push the retagged image to a registry
-            # docker push myimage:$GIT_SHA
+            # docker push myimage:${{ env.GIT_SHA }}
           else
             echo "SHAs match: No action needed."
-        env:
-          GIT_SHA: ${{ env.GIT_SHA }}
-          OUTPUT_SHA: ${{ env.OUTPUT_SHA }}
 
   deploy:
     runs-on: ubuntu-latest
