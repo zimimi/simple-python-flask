@@ -71,6 +71,7 @@ jobs:
             # docker push myimage:${{ env.GIT_SHA }}
           else
             echo "SHAs match: No action needed."
+          fi
 
   deploy:
     runs-on: ubuntu-latest
