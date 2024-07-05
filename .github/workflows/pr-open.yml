@@ -31,10 +31,12 @@ jobs:
         run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
       - name: Print Git commit hash
         run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}" > "outputs.txt"
-      - name: Setup artifactory
-        uses: jfrog/setup-jfrog-cli@v4
-      - name: Push output to Artifactory
-        run: jf rt upload  --url ${{ secrets.ARTIFACTORY_URL }} --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }} --password ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} "outputs.txt" ${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}
+      - name: Upload output.txt to Artifactory
+        run: |
+          curl -v -X PUT \
+            --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
+            --upload-file ./outputs.txt \
+            ${{ ARTIFACTORY_URL }}/${{ ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
 
   deploy:
     runs-on: ubuntu-latest
