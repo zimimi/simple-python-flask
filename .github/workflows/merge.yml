@@ -66,7 +66,7 @@ jobs:
         run: |
           if [ "${{ env.GIT_SHA }}" != "${{ env.OUTPUT_SHA }}" ]; then
             echo "SHA mismatch: Retagging Docker image."
-            docker tag myimage:${{ env.OUTPUT_SHA }} myimage:${{ env.GIT_SHA }}
+            echo "Output Sha = ${{ env.OUTPUT_SHA }}, Git Sha = ${{ env.GIT_SHA }}"
             # Optionally, push the retagged image to a registry
             # docker push myimage:${{ env.GIT_SHA }}
           else
