@@ -36,7 +36,7 @@ jobs:
           curl -v -X PUT \
             --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
             --upload-file ./outputs.txt \
-            ${{ secrets.ARTIFACTORY_URL }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
+            https://${{ secrets.ARTIFACTORY_URL }}/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
 
   deploy:
     runs-on: ubuntu-latest
