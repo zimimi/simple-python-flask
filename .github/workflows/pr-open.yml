@@ -16,38 +16,50 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: dev
     outputs:
-      image-tag: ${{ steps.set-output.outputs.image-tag }}
-      commit-hash: ${{ steps.commit-hash.outputs.git-sha }}
+      pr-number: ${{ steps.extract-pr-number.outputs.pr-number }}
+      short-commit-hash: ${{ steps.extract-commit-hash.outputs.git-sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Extract Git commit hash
-        id: commit-hash
+        id: extract-commit-hash
         run: echo "git-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Set output
-        id: set-output
-        run: echo "image-tag=${{ github.event.number }}" >> $GITHUB_OUTPUT
+        id: extract-pr-number
+        run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
+      - name: Print Git commit hash
+        run: echo "${{ steps.extract-commit-hash.outputs.git-sha }}" > "outputs.txt"
+      - name: Upload output.txt to Artifactory
+        run: |
+          curl -v -X PUT \
+            --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
+            --upload-file ./outputs.txt \
+            https://${{ secrets.ARTIFACTORY_URL }}/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
 
   deploy:
     runs-on: ubuntu-latest
+    environment: dev
     needs: build
     steps:
-      - name: Print image tag
-        run: echo "${{ needs.build.outputs.image-tag }}"
+      - name: Print pr number
+        run: echo "${{ needs.build.outputs.pr-number }}"
       - name: Print Git commit hash
-        run: echo "${{ needs.build.outputs.commit-hash }}" > output.txt
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-output
-          path: output.txt
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: my-output
-          path: .
-
-      - name: Read and use output
+        run: echo "${{ needs.build.outputs.short-commit-hash }}"
+      - name: Download output.txt from Artifactory
         run: |
-          cat output.txt
+          curl -v -O \
+            --user ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}:${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }} \
+            https://${{ secrets.ARTIFACTORY_URL }}/artifactory/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/outputs.txt
+
+      - name: Verify downloaded file
+        run: |
+          if [ -f "./outputs.txt" ]; then
+            echo "File downloaded successfully."
+          else
+            echo "File download failed."
+            exit 1
+          fi
+      - name: Print outputs.txt
+        run: cat outputs.txt
