@@ -49,10 +49,10 @@ jobs:
         run: echo "${{ steps.set-pr-number.outputs.pr-number }}"
 
       - name: Print test var
-        run: echo "${{ env.TEST_VAR }}"
+        run: echo "$TEST_VAR"
 
       - name: Print all git envs
-        run: echo "${{ env.GITHUB_ENV }}"
+        run: env
 
         
 
