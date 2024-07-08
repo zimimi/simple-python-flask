@@ -49,7 +49,7 @@ jobs:
         run: echo "${{ steps.set-pr-number.outputs.pr-number }}"
 
       - name: Print test var
-        run: echo "$TEST_VAR"
+        run: echo "${{ vars.TEST_VAR }}"
 
       - name: Print all git envs
         run: env
