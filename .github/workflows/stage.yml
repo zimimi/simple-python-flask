@@ -15,7 +15,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Extract Git commit hash
-        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-      - name: Print git sha
-        run: echo "${{ env.GIT_SHA }}"
+
+      - name: Get PR from API
+        run: |
+          # GitHub CLI api
+          # https://cli.github.com/manual/gh_api
+          PR=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].number')
+          echo "$PR"
+        env:
+          GH_TOKEN: ${{ github.token }}
