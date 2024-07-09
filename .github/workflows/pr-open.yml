@@ -63,10 +63,8 @@ jobs:
         run: |
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/zimimi/simple-python-flask/commits/${{ steps.extract-commit-hash.outputs.short-git-sha }}/pulls
+          PR=$(gh api /repos/zimimi/simple-python-flask/commits/${{ steps.extract-commit-hash.outputs.short-git-sha }}/pulls | jq -r .number)
+          echo "$PR"
         env:
           GH_TOKEN: ${{ github.token }}
 
