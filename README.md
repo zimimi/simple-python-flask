@@ -1,4 +1,4 @@
-test-42.3
+test-42.4
 Status of Last Buld workflow:<br>
 <img src="https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg?"><br>
 text
