@@ -70,6 +70,18 @@ jobs:
           pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           echo $pull_number
 
+      - name: Get PR from API
+        run: |
+          # GitHub CLI api
+          # https://cli.github.com/manual/gh_api
+          PR=$(gh api \
+             -H "Accept: application/vnd.github+json" \
+             -H "X-GitHub-Api-Version: 2022-11-28" \
+             /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls)
+          echo "$PR"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   deploy:
     runs-on: ubuntu-latest
     needs: [vars, build]
