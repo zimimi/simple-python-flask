@@ -63,7 +63,7 @@ jobs:
         run: |
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          PR=$(gh api /repos/zimimi/simple-python-flask/commits/${{ steps.extract-commit-hash.outputs.short-git-sha }}/pulls | jq -r .number)
+          PR=$(gh api /repos/zimimi/simple-python-flask/commits/${{ steps.extract-commit-hash.outputs.short-git-sha }}/pulls | jq -r '.[0].number')
           echo "$PR"
         env:
           GH_TOKEN: ${{ github.token }}
