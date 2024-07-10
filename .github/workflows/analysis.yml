@@ -1,29 +1,43 @@
 name: Analysis
 
 on:
-  push:
-    branches: [main]
-  merge_group:
-  pull_request:
-    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft]
-  workflow_dispatch:
+    push:
+      branches: [main]
+    pull_request:
+    workflow_dispatch:
 
 jobs:
-  trivy:
-    name: Trivy Security Scan
-    if: ${{ ! github.event.pull_request.draft }}
+  codeql:
+    name: CodeQL
     runs-on: ubuntu-22.04
-    timeout-minutes: 1
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+    
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
+
+  trivy:
+    name: Trivy vulnerability scanner in repo mode
+    runs-on: ubuntu-22.04
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.17.0
+        uses: aquasecurity/trivy-action@master
         with:
-          format: "sarif"
-          output: "trivy-results.sarif"
+          scan-type: 'fs'
           ignore-unfixed: true
-          scan-type: "fs"
-          scanners: "vuln,secret,config"
+          format: "sarif"
+          output: 'trivy-results.sarif'
           severity: "CRITICAL,HIGH"
 
       - name: Upload Trivy scan results to GitHub Security tab
