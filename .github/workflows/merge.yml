@@ -35,17 +35,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Get PR info from API
-        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls)" >> $GITHUB_ENV
+      - name: Get current main sha
+        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].base.sha')" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Print PR info
+      - name: Print current main sha
         run: echo "${{ env.PR_NUMBER }}"
         
       - name: Check if branch is up to date with main
         run: |
-          if git merge-base --is-ancestor origin/main HEAD; then
+          if git merge-base --is-ancestor origin/main ${{ env.PR_NUMBER }}; then
             echo "This branch is up to date with main. Procced"
             echo "Commit hash ${{ github.sha }}"
             echo "HEAD SHA: $(git rev-parse HEAD)"
