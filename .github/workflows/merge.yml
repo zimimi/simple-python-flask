@@ -46,7 +46,7 @@ jobs:
 
       - name: Print commit hash
         if: success()
-        run: echo "Commit hash: ${{ github.sha }}"
+        run: echo "Commit hash ${{ github.sha }}"
         
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v2
