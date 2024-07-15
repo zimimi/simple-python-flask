@@ -48,9 +48,11 @@ jobs:
           if git merge-base --is-ancestor origin/main HEAD; then
             echo "This branch is up to date with main. Procced"
             echo "Commit hash ${{ github.sha }}"
+            echo "HEAD SHA: $(git rev-parse HEAD)"
           else
             echo "This branch is not up to date with main. Need to update."
             echo "Commit hash ${{ github.sha }}"
+            echo "HEAD SHA: $(git rev-parse HEAD)"
             exit 1
           fi
         
