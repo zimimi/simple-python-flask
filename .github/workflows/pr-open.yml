@@ -26,6 +26,13 @@ jobs:
 
       - name: Print commit hash
         run: echo "Commit hash ${{ github.sha }}"
+
+      - name: Get PR info from API
+        run: |
+          echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls"
+          echo "${PR_NUMBER}"
+        env:
+          GH_TOKEN: ${{ github.token }}
         
   #     - name: Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v2
