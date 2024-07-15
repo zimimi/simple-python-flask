@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Get current main sha
-        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].base.sha')" >> $GITHUB_ENV
+        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].head.sha')" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ github.token }}
 
