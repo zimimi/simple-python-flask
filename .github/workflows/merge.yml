@@ -34,15 +34,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: check if branch is ahead of main
+        
+      - name: Check if branch is up to date with main
         run: |
-          if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
-          then echo "This branch is not up to date with main";
-          exit 1; fi
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "This branch is up to date with main. Exiting."
+            exit 1
+          else
+            echo "This branch is not up to date with main. Continuing."
+          fi
 
-      - name: Proceed next steps
-        run: echo "Proceed next steps"
+      - name: Print commit hash
+        if: success()
+        run: echo "Commit hash: ${{ github.sha }}"
         
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v2
