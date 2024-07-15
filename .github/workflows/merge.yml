@@ -34,59 +34,68 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - name: Extract Git commit hash
-        id: extract-commit-hash
-        run: echo "short-git-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Set PR number
-        id: set-pr-number
-        run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
-
-      - name: Login to Artifactory image registry with Docker
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ARTIFACTORY_URL }}
-          username: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }}
-          
-      - name: Print Short commit hash
-        run: echo "${{ steps.extract-commit-hash.outputs.short-git-sha }}"
-        
-      - name: Print PR number
-        run: echo "${{ steps.set-pr-number.outputs.pr-number }}"
-
-      - name: Print test var
-        run: echo "${{ vars.TEST_VAR }}"
-
-      - name: Print all git envs
-        run: env
-
-      - name: Print custom PR number
+      - name: check if branch is ahead of main
         run: |
-          pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo $pull_number
+          if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
+          then echo "This branch is not up to date with main";
+          exit 1; fi
 
-      - name: Get PR from API
-        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].number')" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Proceed next steps
+        run: echo "Proceed next steps"
+        
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
+        
+      # - name: Extract Git commit hash
+      #   id: extract-commit-hash
+      #   run: echo "short-git-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Print PR number
-        run: echo "${{ env.PR_NUMBER }}"
+      # - name: Set PR number
+      #   id: set-pr-number
+      #   run: echo "pr-number=${{ github.event.number }}" >> $GITHUB_OUTPUT
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [vars, build]
-    steps:
-      - name: Print image tag
-        run: echo "${{ needs.vars.outputs.pr }}"
-      - name: Print Git commit hash
-        run: echo "${{ needs.build.outputs.commit-hash }}"
-      - name: Print Github output
-        run: echo "$GITHUB_OUTPUT"
-      - name: Print Github env
-        run: echo "$GITHUB_ENV"
+      # - name: Login to Artifactory image registry with Docker
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ secrets.ARTIFACTORY_URL }}
+      #     username: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_USERNAME }}
+      #     password: ${{ secrets.ARTIFACTORY_SERVICEACCOUNT_PASSWORD }}
+          
+      # - name: Print Short commit hash
+      #   run: echo "${{ steps.extract-commit-hash.outputs.short-git-sha }}"
+        
+      # - name: Print PR number
+      #   run: echo "${{ steps.set-pr-number.outputs.pr-number }}"
+
+      # - name: Print test var
+      #   run: echo "${{ vars.TEST_VAR }}"
+
+      # - name: Print all git envs
+      #   run: env
+
+      # - name: Print custom PR number
+      #   run: |
+      #     pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+      #     echo $pull_number
+
+      # - name: Get PR from API
+      #   run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].number')" >> $GITHUB_ENV
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+
+      # - name: Print PR number
+      #   run: echo "${{ env.PR_NUMBER }}"
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: [vars, build]
+  #   steps:
+  #     - name: Print image tag
+  #       run: echo "${{ needs.vars.outputs.pr }}"
+  #     - name: Print Git commit hash
+  #       run: echo "${{ needs.build.outputs.commit-hash }}"
+  #     - name: Print Github output
+  #       run: echo "$GITHUB_OUTPUT"
+  #     - name: Print Github env
+  #       run: echo "$GITHUB_ENV"
