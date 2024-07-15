@@ -36,16 +36,35 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Get current main sha
-        run: echo "PR_NUMBER=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].head.sha')" >> $GITHUB_ENV
+        run: echo "MAIN_SHA=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].base.sha')" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Print current main sha
-        run: echo "${{ env.PR_NUMBER }}"
+        run: echo "${{ env.MAIN_SHA }}"
+
+      - name: Get current pr sha
+        run: echo "PR_SHA=$(gh api /repos/zimimi/simple-python-flask/commits/${{ github.sha }}/pulls | jq -r '.[0].head.sha')" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Print current main sha
+        run: echo "${{ env.PR_SHA }}"
+
+      - name: Check if branch is ahead of main
+        run: |
+          COMPARE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/compare/${{ env.MAIN_SHA }}...${{ env.PR_SHA }}")
+
+          STATUS=$(echo $COMPARE | jq -r '.status')
+          if [ "$STATUS" != "identical" ] && [ "$STATUS" != "ahead" ]; then
+            echo "This branch is not up to date with main."
+            exit 1
+          fi
         
       - name: Check if branch is up to date with main
         run: |
-          if git merge-base --is-ancestor origin/main ${{ env.PR_NUMBER }}; then
+          if git merge-base --is-ancestor origin/main HEAD; then
             echo "This branch is up to date with main. Procced"
             echo "Commit hash ${{ github.sha }}"
             echo "HEAD SHA: $(git rev-parse HEAD)"
