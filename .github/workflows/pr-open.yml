@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - edited
   workflow_dispatch: # This allows you to manually trigger the workflow
 
 concurrency:
