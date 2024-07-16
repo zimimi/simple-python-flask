@@ -36,8 +36,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t my-app:latest .
+
+      - name: Run Docker container
+        run: docker run -d -p 3000:3000 --name my-app my-app:latest
+
+      - name: Wait for the container to be ready
+        run: |
+          until curl -s http://localhost:3000 > /dev/null; do sleep 1; done
         
   #     - name: Extract Git commit hash
   #       id: extract-commit-hash
