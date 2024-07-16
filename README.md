@@ -7,5 +7,4 @@ text
 [![Build](https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml/badge.svg)](https://github.com/zimimi/simple-python-flask/actions/workflows/pr-open.yml)
 
 
-test-65
-test-66
+test-68
