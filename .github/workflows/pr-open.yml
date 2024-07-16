@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    types: [ edited, opened, synchronize ]
   workflow_dispatch: # This allows you to manually trigger the workflow
 
 concurrency:
@@ -32,6 +31,19 @@ jobs:
           echo "${PR_NUMBER}"
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Build Docker image
+        run: docker build -t simple-python-app:latest -f ./Dockerfile . --no-cache
+
+      - name: Trivy Vulnerability Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: simple-python-app:latest
+          format: table
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: "CRITICAL,HIGH"
         
   #     - name: Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v2
